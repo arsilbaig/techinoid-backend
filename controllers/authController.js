@@ -19,10 +19,34 @@ exports.login = async (req, res) => {
     }
     const displayName =admin.firstName + " " + admin.lastName;
     const token = jwt.sign({ id: admin.id }, JWT_SECRET, {
-      expiresIn: 3600
+      expiresIn: 86400
     });
     res.status(200).json( {
       token: token,
+      role: "Admin",
+      data: {
+             displayName: displayName,
+              email:email
+    }}
+    );
+  } catch (error) {
+    res.status(500).json({ message: 'An error occurred while logging in' + error });
+  }
+};
+exports.refreshToken = async (req, res) => {
+  try {
+    const {email} = req. body;
+    const admin = await Admin.findOne({ where: { email } });
+    if (!admin) {
+      return res.status(400).json({ message: 'Incorrect email' });
+    }
+    const displayName =admin.firstName + " " + admin.lastName;
+    const token = jwt.sign({ id: admin.id }, JWT_SECRET, {
+      expiresIn: 43200
+    });
+    res.status(200).json( {
+      token: token,
+      refToken:token,
       role: "Admin",
       data: {
              displayName: displayName,
