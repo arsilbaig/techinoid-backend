@@ -22,12 +22,16 @@ exports.login = async (req, res) => {
       expiresIn: 86400
     });
     res.status(200).json( {
-      token: token,
-      role: "Admin",
+      status: 200,
       data: {
-             displayName: displayName,
-              email:email
-    }}
+        token: token,
+        role: "admin",
+        user: {
+          displayName: displayName,
+          email: email
+        }
+      }  
+    }
     );
   } catch (error) {
     res.status(500).json({ message: 'An error occurred while logging in' + error });

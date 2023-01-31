@@ -1,7 +1,8 @@
-// portfolioController.js
-const Portfolio = require('../models/portfolio');
+const db = require('../models');
+const base64 = require('base64-arraybuffer');
+const portfolio = db.portfolio
 
-// Get all portfolios
+
 exports.getAllPortfolios = async (req, res) => {
   try {
     const portfolios = await Portfolio.findAll();
@@ -11,7 +12,7 @@ exports.getAllPortfolios = async (req, res) => {
   }
 };
 
-// Get single portfolio by id
+
 exports.getPortfolioById = async (req, res) => {
   try {
     const portfolio = await Portfolio.findByPk(req.params.id);
@@ -24,7 +25,7 @@ exports.getPortfolioById = async (req, res) => {
   }
 };
 
-// Create a portfolio
+
 exports.createPortfolio = async (req, res) => {
   try {
     const portfolio = await Portfolio.create(req.body);
@@ -35,7 +36,7 @@ exports.createPortfolio = async (req, res) => {
   }
 };
 
-// Update a portfolio
+
 exports.updatePortfolio = async (req, res) => {
   try {
     const [updated] = await Portfolio.update(req.body, {
@@ -51,7 +52,7 @@ exports.updatePortfolio = async (req, res) => {
   }
 };
 
-// Delete a portfolio
+
 exports.deletePortfolio = async (req, res) => {
   try {
     const deleted = await Portfolio.destroy({ where: { id: req.params.id } });

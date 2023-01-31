@@ -1,18 +1,21 @@
 const db = require('../models');
+const joi = require('joi');
+const base64 = require('base64-arraybuffer');
 const blog = db.blog
 
 exports.createBlog = async (req, res) => {
   try {
     const { title, content, image, publishedAt } = req.body;
-    const blog = await Blog.create({
+    const imageBase64 = base64.encode(image);
+    const blogs = await blog.create({
       title,
       content,
-      image,
+      image: imageBase64,
       publishedAt
     });
     res.status(201).json({
       message: 'Blog created successfully',
-      blog
+      blogs
     });
   } catch (error) {
     res.status(400).json({
@@ -42,15 +45,15 @@ const blogs = await blog.findAll();
 exports.getBlogById = async (req, res) => {
   try {
     const { id } = req.params;
-    const blog = await Blog.findByPk(id);
-    if (!blog) {
+    const blogs = await blog.findOne({where: {id: id}});
+    if (!blogs) {
       return res.status(404).json({
         message: 'Blog not found',
       });
     }
     res.status(200).json({
       message: 'Blog retrieved successfully',
-      blog
+      blogs
     });
   } catch (error) {
     res.status(400).json({
@@ -63,7 +66,7 @@ exports.getBlogById = async (req, res) => {
 exports.updateBlog = async (req, res) => {
   try {
     const { id } = req.params;
-    const [updated] = await Blog.update(req.body, {
+    const updated = await blog.update(req.body, {
       where: { id },
       returning: true,
     });
@@ -86,7 +89,7 @@ exports.updateBlog = async (req, res) => {
 exports.deleteBlog = async (req, res) => {
   try {
     const { id } = req.params;
-    const deleted = await Blog.destroy({
+    const deleted = await blog.destroy({
       where: { id },
     });
     if (!deleted) {
