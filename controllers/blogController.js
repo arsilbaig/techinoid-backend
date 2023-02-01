@@ -3,7 +3,35 @@ const joi = require('joi');
 const base64 = require('base64-arraybuffer');
 const blog = db.blog
 
+const schema = joi.object({
+  title: joi.string().required(),
+  author: joi.string().required(),
+  content: joi.string().required(),
+  date_published: joi.date().required()
+})
+
+const createBlogSchema = joi.object().keys({
+  title: joi.string().required(),
+  content: joi.string().required(),
+  image: joi.binary().required(),
+  publishedAt: joi.date().required()
+});
+
+const updateBlogSchema = joi.object().keys({
+  title: joi.string(),
+  content: joi.string(),
+  image: joi.binary(),
+  publishedAt: joi.date()
+});
+
 exports.createBlog = async (req, res) => {
+  const validation = schema.validate(req.body, createBlogSchema);
+  if (validation.error) {
+    return res.status(400).json({
+      message: 'Validation failed',
+      error: validation.error.details
+    });
+  }
   try {
     const { title, content, image, publishedAt } = req.body;
     const imageBase64 = base64.encode(image);
@@ -26,10 +54,8 @@ exports.createBlog = async (req, res) => {
 };
 
 exports.getBlogs = async (req, res) => {
-try {
-  const dummy = blog
-const blogs = await blog.findAll();
-
+  try {
+    const blogs = await blog.findAll();
     res.status(200).json({
       message: 'Blogs retrieved successfully',
       blogs
@@ -64,9 +90,30 @@ exports.getBlogById = async (req, res) => {
 };
 
 exports.updateBlog = async (req, res) => {
+  const schema = joi.object().keys({
+    title: joi.string().required(),
+    content: joi.string().required(),
+    image: joi.binary().required(),
+    publishedAt: joi.date().required()
+  });
+  
+  const { error, value } = schema.validate(req.body, schema);
+  if (error) {
+    return res.status(400).json({
+      message: 'Validation error',
+      error: error.message
+    });
+  }
+
   try {
     const { id } = req.params;
-    const updated = await blog.update(req.body, {
+    const imageBase64 = base64.encode(value.image);
+    const updated = await blog.update({
+      title: value.title,
+      content: value.content,
+      image: imageBase64,
+      publishedAt: value.publishedAt
+    }, {
       where: { id },
       returning: true,
     });
@@ -85,10 +132,18 @@ exports.updateBlog = async (req, res) => {
     });
   }
 };
-
 exports.deleteBlog = async (req, res) => {
   try {
     const { id } = req.params;
+    const schema = joi.object({
+      id: joi.string().required()
+    });
+    const { error } = schema.validate({ id });
+    if (error) {
+      return res.status(400).json({
+        message: error.message
+      });
+    }
     const deleted = await blog.destroy({
       where: { id },
     });

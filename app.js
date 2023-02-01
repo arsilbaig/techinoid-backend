@@ -2,7 +2,13 @@ const express = require('express');
 const app = express();
 const bodyParser = require('body-parser');
 const db = require('./models');
+const cors = require('cors');
 
+const corsOptions = {
+  origin: '*',
+  optionsSuccessStatus: 200
+}
+app.use(cors(corsOptions));
 app.use(bodyParser.json());
 
 const authRoutes = require('./routes/authRoutes');

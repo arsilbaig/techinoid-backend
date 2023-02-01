@@ -8,7 +8,7 @@ var JWT_SECRET= "secretkey"
 
 exports.login = async (req, res) => {
   try {
-    const {email, password } = req. body;
+    const { email, password } = req.body;
     const admin = await Admin.findOne({ where: { email } });
     if (!admin) {
       return res.status(400).json({ message: 'Incorrect email or password' });
@@ -17,51 +17,47 @@ exports.login = async (req, res) => {
     if (!isMatch) {
       return res.status(400).json({ message: 'Incorrect email or password' });
     }
-    const displayName =admin.firstName + " " + admin.lastName;
+    const displayName = admin.firstName + " " + admin.lastName;
     const token = jwt.sign({ id: admin.id }, JWT_SECRET, {
       expiresIn: 86400
     });
-    res.status(200).json( {
-      status: 200,
-      data: {
-        token: token,
-        role: "admin",
-        user: {
-          displayName: displayName,
-          email: email
-        }
-      }  
-    }
-    );
+    res.status(200).json({
+      token: token,
+      role: "admin",
+      user: {
+        displayName: displayName,
+        email: email
+      }
+    });
   } catch (error) {
     res.status(500).json({ message: 'An error occurred while logging in' + error });
   }
 };
 exports.refreshToken = async (req, res) => {
   try {
-    const {email} = req. body;
+    const { email } = req.body;
     const admin = await Admin.findOne({ where: { email } });
     if (!admin) {
       return res.status(400).json({ message: 'Incorrect email' });
     }
-    const displayName =admin.firstName + " " + admin.lastName;
+    const displayName = admin.firstName + " " + admin.lastName;
     const token = jwt.sign({ id: admin.id }, JWT_SECRET, {
       expiresIn: 43200
     });
-    res.status(200).json( {
+    res.status(200).json({
       token: token,
-      refToken:token,
+      refToken: token,
       role: "Admin",
       data: {
-             displayName: displayName,
-              email:email
-    }}
+        displayName: displayName,
+        email: email
+      }
+    }
     );
   } catch (error) {
     res.status(500).json({ message: 'An error occurred while logging in' + error });
   }
 };
-
 const authenticate = async (req, res, next) => {
   const token = req.header('x-auth-token');
   if (!token) {
