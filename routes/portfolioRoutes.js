@@ -1,19 +1,20 @@
 const express = require('express');
 const router = express.Router();
 const portfolioController = require('../controllers/portfolioController');
+const authToken = require('../middlewares/verifyToken')
 
-router.get('/', portfolioController.getAllPortfolios);
-
-
-router.get('/:id', portfolioController.getPortfolioById);
+router.get('/portfolios', portfolioController.getAllPortfolios);
 
 
-router.post('/', portfolioController.createPortfolio);
+router.get('/portfolios/:id', portfolioController.getPortfolioById);
 
 
-router.put('/:id', portfolioController.updatePortfolio);
+router.post('/portfolios/create', authToken, portfolioController.createPortfolio);
 
 
-router.delete('/:id', portfolioController.deletePortfolio);
+router.put('/portfolios/update/:id',authToken, portfolioController.updatePortfolio);
+
+
+router.delete('/portfolios/delete/:id', authToken, portfolioController.deletePortfolio);
 
 module.exports = router;

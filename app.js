@@ -4,6 +4,9 @@ const bodyParser = require('body-parser');
 const db = require('./models');
 const cors = require('cors');
 
+app.use(bodyParser.text({ limit: '16mb' }))
+app.use(bodyParser.urlencoded({ limit: '16mb', extended: true }))
+
 const corsOptions = {
   origin: '*',
   optionsSuccessStatus: 200
