@@ -57,7 +57,7 @@ exports.refreshToken = async (req, res) => {
     res.status(200).json({
       token: newToken,
       role: "admin",
-      data: {
+      user: {
         displayName: displayName,
         email: admin.email
       }
