@@ -10,11 +10,11 @@ router.get('/blogs', blogController.getBlogs);
 router.get('/blogs/:id', blogController.getBlogById);
 
 
-router.post('/create',authToken, blogController.createBlog);
+router.post('/blogs/create',authToken, blogController.createBlog);
 
-router.put('/update/:id', authToken, blogController.updateBlog);
+router.put('/blogs/update/:id', authToken, blogController.updateBlog);
 
 
-router.delete('/delete/:id', authToken, blogController.deleteBlog);
+router.delete('/blogs/delete/:id', authToken, blogController.deleteBlog);
 
 module.exports = router;
