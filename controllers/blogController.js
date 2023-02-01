@@ -5,27 +5,13 @@ const blog = db.blog
 
 const schema = joi.object({
   title: joi.string().required(),
-  author: joi.string().required(),
+  image: joi.string().required(),
   content: joi.string().required(),
-  date_published: joi.date().required()
-})
-
-const createBlogSchema = joi.object().keys({
-  title: joi.string().required(),
-  content: joi.string().required(),
-  image: joi.binary().required(),
   publishedAt: joi.date().required()
-});
 
-const updateBlogSchema = joi.object().keys({
-  title: joi.string(),
-  content: joi.string(),
-  image: joi.binary(),
-  publishedAt: joi.date()
-});
-
+})
 exports.createBlog = async (req, res) => {
-  const validation = schema.validate(req.body, createBlogSchema);
+  const validation = schema.validate(req.body);
   if (validation.error) {
     return res.status(400).json({
       message: 'Validation failed',
@@ -33,7 +19,7 @@ exports.createBlog = async (req, res) => {
     });
   }
   try {
-    const { title, content, image, publishedAt } = req.body;
+    const {title, content, image, publishedAt} = req.body;
     const imageBase64 = base64.encode(image);
     const blogs = await blog.create({
       title,
@@ -90,21 +76,13 @@ exports.getBlogById = async (req, res) => {
 };
 
 exports.updateBlog = async (req, res) => {
-  const schema = joi.object().keys({
-    title: joi.string().required(),
-    content: joi.string().required(),
-    image: joi.binary().required(),
-    publishedAt: joi.date().required()
-  });
-  
-  const { error, value } = schema.validate(req.body, schema);
+  const { error, value } = schema.validate(req.body);
   if (error) {
     return res.status(400).json({
       message: 'Validation error',
       error: error.message
     });
   }
-
   try {
     const { id } = req.params;
     const imageBase64 = base64.encode(value.image);
