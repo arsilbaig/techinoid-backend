@@ -1,6 +1,5 @@
 const db = require('../models');
 const joi = require('joi');
-const base64 = require('base64-arraybuffer');
 const blog = db.blog
 
 const schema = joi.object({
@@ -20,11 +19,10 @@ exports.createBlog = async (req, res) => {
   }
   try {
     const {title, content, image, publishedAt} = req.body;
-    const imageBase64 = base64.encode(image);
     const blogs = await blog.create({
       title,
       content,
-      image: imageBase64,
+      image,
       publishedAt
     });
     res.status(201).json({
@@ -85,11 +83,10 @@ exports.updateBlog = async (req, res) => {
   }
   try {
     const { id } = req.params;
-    const imageBase64 = base64.encode(value.image);
     const updated = await blog.update({
       title: value.title,
       content: value.content,
-      image: imageBase64,
+      image: value.image,
       publishedAt: value.publishedAt
     }, {
       where: { id },
