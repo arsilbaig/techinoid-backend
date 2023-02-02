@@ -8,15 +8,15 @@ const JobPosts = sequelize.define('jobPost', {
     allowNull: false,
   },
   description: {
-    type: Sequelize.TEXT,
+    type: Sequelize.TEXT('long'),
     allowNull: false,
   },
   requirements: {
-    type: Sequelize.TEXT,
+    type: Sequelize.TEXT('long'),
     allowNull: false,
   },
   offer: {
-    type: Sequelize.TEXT,
+    type: Sequelize.TEXT('long'),
     allowNull: false,
   },
   job_category: {
