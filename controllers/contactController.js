@@ -51,9 +51,8 @@ exports.getContact = async (req, res) => {
     });
   } catch (error) {
     res.status(500).json({
-        type:'Contact',
-      message: "Failed to retrieve contactUS",
-      error: error.message,
+        type:'contact',
+      message: "Failed to retrieve contactUS"
     });
   }
 };
@@ -68,7 +67,7 @@ exports.deleteContact = async (req, res) => {
         if (error) {
           return res.status(400).json({
             type:'validation',
-            message: error.message
+            message:"validation failed"
           });
         }
         const deleted = await contactUs.destroy({
@@ -77,16 +76,16 @@ exports.deleteContact = async (req, res) => {
         if (!deleted) {
           return res.status(404).json({
             type:'Contact',
-            message: 'Portfolio not found',
+            message: 'Contact not found',
           });
         }
         res.status(200).json({
-          message: 'Portfolio deleted successfully',
+          message: 'Contact deleted successfully',
         });
       } catch (error) {
         res.status(500).json({
-            type:'contact',
-          message: 'Failed to delete Portfolio',
+            type:'Delete',
+          message: 'Failed to delete contact',
           error: error.message
         });
       }
