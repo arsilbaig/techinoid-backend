@@ -12,7 +12,7 @@ module.exports = (sequelize) => {
     },
     image: {
       type: DataTypes.TEXT('long'),
-      allowNull: true,
+      allowNull: false,
     },
     createdAt: {
       type: DataTypes.DATE,

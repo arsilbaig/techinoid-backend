@@ -1,6 +1,4 @@
 const Sequelize = require("sequelize");
-const { sequelize } = require(".");
-
 module.exports = (sequelize, DataTypes) => {
   const contactUs = sequelize.define("contactUs", {
     id: {
@@ -16,17 +14,17 @@ module.exports = (sequelize, DataTypes) => {
 
     name: {
       type: DataTypes.STRING,
-      unique: true,
+      unique: false,
       allowNull: false,
     },
     subject: {
       type: DataTypes.STRING,
-      unique: true,
+      unique: false,
       allowNull: false,
     },
     description: {
       type: DataTypes.TEXT('long'),
-      unique: true,
+      unique: false,
       allowNull: false,
     },
   });

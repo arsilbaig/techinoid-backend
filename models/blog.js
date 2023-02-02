@@ -12,7 +12,7 @@ module.exports = (sequelize, DataTypes) => {
     },
     image: {
       type: DataTypes.TEXT('long'),
-      allowNull: true,
+      allowNull: false,
     },
     publishedAt: {
       type: DataTypes.DATE,
