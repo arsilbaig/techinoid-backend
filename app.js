@@ -23,9 +23,11 @@ app.use(bodyParser.json());
 const authRoutes = require('./routes/authRoutes');
 const blogRoutes = require('./routes/blogRoutes');
 const portfolioRoutes = require('./routes/portfolioRoutes');
+const jobPostRoutes = require('./routes/jobPostRoutes');
 app.use('/', authRoutes);
 app.use('/', blogRoutes);
 app.use('/', portfolioRoutes);
+app.use('/', jobPostRoutes);
 
 
 db.sequelize.sync().then(() => {

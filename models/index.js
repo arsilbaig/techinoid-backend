@@ -15,6 +15,7 @@ if (config.use_env_variable) {
 db.blog = require("../models/blog")(sequelize, DataTypes);
 db.portfolio = require("../models/portfolio")(sequelize, DataTypes);
 db.auth = require("../models/auth")(sequelize, DataTypes);
+db.JobPost = require("../models/jobPost")(sequelize, DataTypes);
 
 db.sequelize = sequelize;
 db.Sequelize = Sequelize;
