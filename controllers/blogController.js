@@ -13,8 +13,8 @@ exports.createBlog = async (req, res) => {
   const validation = schema.validate(req.body);
   if (validation.error) {
     return res.status(400).json({
-      message: 'Validation failed',
-      error: validation.error.details
+      type:'Vlaidation',
+      message: 'Validation failed'
     });
   }
   try {
@@ -30,9 +30,9 @@ exports.createBlog = async (req, res) => {
       blogs
     });
   } catch (error) {
-    res.status(400).json({
-      message: 'Failed to create blog',
-      error: error.message
+    res.status(500).json({
+      type:'Blog',
+      message: error.message
     });
   }
 };
@@ -45,9 +45,9 @@ exports.getBlogs = async (req, res) => {
       blogs
     });
   } catch (error) {
-    res.status(400).json({
-      message: 'Failed to retrieve blogs',
-      error: error.message
+    res.status(500).json({
+      type:'blog',
+      message: error.message
     });
   }
 };
@@ -58,7 +58,8 @@ exports.getBlogById = async (req, res) => {
     const blogs = await blog.findOne({where: {id: id}});
     if (!blogs) {
       return res.status(404).json({
-        message: 'Blog not found',
+        type:'Blog',
+      message: 'Blog not found'
       });
     }
     res.status(200).json({
@@ -66,9 +67,9 @@ exports.getBlogById = async (req, res) => {
       blogs
     });
   } catch (error) {
-    res.status(400).json({
-      message: 'Failed to retrieve blog',
-      error: error.message
+    res.status(500).json({
+      type:'Blog',
+      message: error.message
     });
   }
 };
@@ -77,8 +78,8 @@ exports.updateBlog = async (req, res) => {
   const { error, value } = schema.validate(req.body);
   if (error) {
     return res.status(400).json({
-      message: 'Validation error',
-      error: error.message
+      type:'Validation',
+      message: error.message
     });
   }
   try {
@@ -94,6 +95,7 @@ exports.updateBlog = async (req, res) => {
     });
     if (!updated) {
       return res.status(404).json({
+        type: 'Blog',
         message: 'Blog not found',
       });
     }
@@ -101,9 +103,9 @@ exports.updateBlog = async (req, res) => {
       message: 'Blog updated successfully',
     });
   } catch (error) {
-    res.status(400).json({
-      message: 'Failed to update blog',
-      error: error.message
+    res.status(500).json({
+      type:'Blog',
+      message: error.message
     });
   }
 };
@@ -116,7 +118,8 @@ exports.deleteBlog = async (req, res) => {
     const { error } = schema.validate({ id });
     if (error) {
       return res.status(400).json({
-        message: error.message
+        type:'Validation',
+        message: 'Validation failed'  
       });
     }
     const deleted = await blog.destroy({
@@ -124,6 +127,7 @@ exports.deleteBlog = async (req, res) => {
     });
     if (!deleted) {
       return res.status(404).json({
+        type: 'Blog',
         message: 'Blog not found',
       });
     }
@@ -131,9 +135,9 @@ exports.deleteBlog = async (req, res) => {
       message: 'Blog deleted successfully',
     });
   } catch (error) {
-    res.status(400).json({
-      message: 'Failed to delete blog',
-      error: error.message
+    res.status(500).json({
+      type:'Blog',
+      message: error.message
     });
   }
 };

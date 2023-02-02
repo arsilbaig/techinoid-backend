@@ -17,7 +17,8 @@ exports.getAllPortfolios = async (req, res) => {
       portfolios
     });
   } catch (error) {
-    res.status(400).json({
+    res.status(500).json({
+      type:'portfolios',
       message: 'Failed to retrieve Portfolios',
       error: error.message
     });
@@ -30,7 +31,8 @@ exports.getPortfolioById = async (req, res) => {
     const portfolios = await portfolio.findOne({where: {id: id}});
     if (!portfolios) {
       return res.status(404).json({
-        message: 'portfolio not found',
+        type:'portfolios',
+        message: 'portfolio not found, Invalid id',
       });
     }
     res.status(200).json({
@@ -38,7 +40,8 @@ exports.getPortfolioById = async (req, res) => {
       portfolios
     });
   } catch (error) {
-    res.status(400).json({
+    res.status(500).json({
+      type: 'portfolio',
       message: 'Failed to retrieve Portfolio',
       error: error.message
     });
@@ -50,6 +53,7 @@ exports.createPortfolio = async (req, res) => {
   const validation = schema.validate(req.body);
   if (validation.error) {
     return res.status(400).json({
+      type:'Validation',
       message: 'Validation failed',
       error: validation.error.details
     });
@@ -66,7 +70,8 @@ exports.createPortfolio = async (req, res) => {
       portfolios
     });
   } catch (error) {
-    res.status(400).json({
+    res.status(500).json({
+      type:'portfolio',
       message: 'Failed to create Portfolio',
       error: error.message
     });
@@ -77,8 +82,8 @@ exports.updatePortfolio = async (req, res) => {
   const { error, value } = schema.validate(req.body);
   if (error) {
     return res.status(400).json({
-      message: 'Validation error',
-      error: error.message
+      type:'Validation',
+      message: error.message
     });
   }
   try {
@@ -93,16 +98,17 @@ exports.updatePortfolio = async (req, res) => {
     });
     if (!updated) {
       return res.status(404).json({
-        message: 'Portfolio not found',
+        type:'portfolio',
+        message: 'Portfolio not found, id is invalid',
       });
     }
     res.status(200).json({
       message: 'Portfolio updated successfully',
     });
   } catch (error) {
-    res.status(400).json({
-      message: 'Failed to update Portfolio',
-      error: error.message
+    res.status(500).json({
+      type:'portfolio',
+      message: error.message
     });
   }
 };
@@ -117,6 +123,7 @@ exports.deletePortfolio = async (req, res) => {
     const { error } = schema.validate({ id });
     if (error) {
       return res.status(400).json({
+        type:"Validation",
         message: error.message
       });
     }
@@ -125,16 +132,17 @@ exports.deletePortfolio = async (req, res) => {
     });
     if (!deleted) {
       return res.status(404).json({
-        message: 'Portfolio not found',
+        type:'portfolio',
+        message: 'Portfolio not found, id is invalid',
       });
     }
     res.status(200).json({
       message: 'Portfolio deleted successfully',
     });
   } catch (error) {
-    res.status(400).json({
-      message: 'Failed to delete Portfolio',
-      error: error.message
+    res.status(500).json({
+      type:'portfolio',
+      message: error.message
     });
   }
 };

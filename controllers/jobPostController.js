@@ -20,7 +20,12 @@ const jobPostSchema = Joi.object({
 exports.createJobPost = async (req, res) => {
   const validationResult = jobPostSchema.validate(req.body);
   if (validationResult.error) {
-    return res.status(400).json({ success: false, error: validationResult.error.message });
+    return res.status(400).json({
+      error: {
+        type: 'Validation',
+        message: 'Validation required'
+      }
+    });
   }
 
   const { title, description, requirements, offer, job_category, department, job_type, location, total_positions, experience, posting_date, apply_before } = req.body;
@@ -41,7 +46,12 @@ exports.createJobPost = async (req, res) => {
     });
     res.json({ success: true, jobPosts });
   } catch (error) {
-    res.status(400).json({ success: false, error: error.message });
+    return res.status(500).json({
+      error: {
+        type: 'JobPost',
+        message: error.message
+      }
+    });
   }
 };
 
@@ -53,9 +63,10 @@ exports.getJobPosts = async (req, res) => {
       jobposts
     });
   } catch (error) {
-    res.status(400).json({
-      message: 'Failed to retrieve jobs',
-      error: error.message
+    res.status(500).json({
+      type: 'jobPost',
+      message: error.message
+      
     });
   }
   };
@@ -64,28 +75,48 @@ exports.getJobPostById = async (req, res) => {
   try {
     const jobPosts = await JobPost.findByPk(req.params.id);
     if (!jobPosts) {
-      return res.status(404).json({ success: false, error: 'Job post not found' });
+      res.status(404).json({
+        type: 'jobPost',
+        message: error.message
+        
+      });
     }
     res.json({ success: true, jobPosts });
   } catch (error) {
-    res.status(400).json({ success: false, error: error.message });
+    res.status(500).json({
+      type: 'jobPost',
+      message: error.message
+      
+    });
   }
 };
 
 exports.updateJobPost = async (req, res) => {
   const validationResult = jobPostSchema.validate(req.body);
   if (validationResult.error) {
-    return res.status(400).json({ success: false, error: validationResult.error.message });
+    res.status(400).json({
+      type: 'Validation',
+      message: error.message
+      
+    });
   }
 
   try {
     const result = await JobPost.update(req.body, { where: { id: req.params.id } });
     if (result[0] === 0) {
-      return res.status(404).json({ success: false, error: 'Job post not found' });
+      res.status(404).json({
+        type: 'jobPost',
+        message: error.message
+        
+      });
     }
     res.json({ success: true, message: 'Job post updated successfully' });
   } catch (error) {
-    res.status(400).json({ success: false, error: error.message });
+    res.status(500).json({
+      type: 'jobPost',
+      message: error.message
+      
+    });
   }
 };
 
@@ -93,10 +124,17 @@ exports.deleteJobPost = async (req, res) => {
   try {
     const result = await JobPost.destroy({ where: { id: req.params.id } });
     if (result === 0) {
-      return res.status(404).json({ success: false, error: 'Job post not found' });
+      res.status(404).json({
+        type: 'Job Post',
+        message: error.message
+      });
     }
     res.json({ success: true, message: 'Job post deleted successfully' });
   } catch (error) {
-    res.status(400).json({ success: false, error: error.message });
+    res.status(500).json({
+      type: 'Job Post',
+      message: error.message
+      
+    });
   }
 };

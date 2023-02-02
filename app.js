@@ -24,10 +24,12 @@ const authRoutes = require('./routes/authRoutes');
 const blogRoutes = require('./routes/blogRoutes');
 const portfolioRoutes = require('./routes/portfolioRoutes');
 const jobPostRoutes = require('./routes/jobPostRoutes');
+const contactRoutes = require('./routes/contactRoutes');
 app.use('/', authRoutes);
 app.use('/', blogRoutes);
 app.use('/', portfolioRoutes);
 app.use('/', jobPostRoutes);
+app.use('/', contactRoutes);
 
 
 db.sequelize.sync().then(() => {

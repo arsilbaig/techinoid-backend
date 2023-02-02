@@ -11,11 +11,21 @@ exports.login = async (req, res) => {
     const { email, password } = req.body;
     const admin = await Admin.findOne({ where: { email } });
     if (!admin) {
-      return res.status(400).json({ message: 'Incorrect email' });
+      return res.status(400).json({
+        error: {
+          type: 'email',
+          message: 'Incorrect email'
+        }
+      });
     }
     const isMatch = await bcrypt.compare(password, admin.password);
     if (!isMatch) {
-      return res.status(400).json({ message: 'Incorrect password' });
+      return res.status(400).json({
+        error: {
+          type: 'password',
+          message: 'Incorrect password'
+        }
+      });
     }
     const displayName = admin.firstName + " " + admin.lastName;
     const token = jwt.sign({ id: admin.id }, JWT_SECRET, {
@@ -30,7 +40,9 @@ exports.login = async (req, res) => {
       }
     });
   } catch (error) {
-    res.status(500).json({ message: 'An error occurred while logging in' + error });
+    res.status(500).json({ 
+      type:'login',
+      message: 'An error occurred while logging in' + error });
   }
 };
 exports.refreshToken = async (req, res) => {
@@ -43,12 +55,22 @@ exports.refreshToken = async (req, res) => {
     }
  
     if (!token) {
-      return res.status(401).json({ message: 'No refresh token, authorization denied' });
+      return res.status(400).json({
+        error: {
+          type: 'Refresh Token',
+          message: 'authorization denied'
+        }
+      });
     }
     const decoded = jwt.verify(token, JWT_SECRET);
     const admin = await Admin.findByPk(decoded.id);
     if (!admin) {
-      return res.status(401).json({ message: 'Invalid refresh token' });
+      return res.status(400).json({
+        error: {
+          type: 'Refresh Token',
+          message: 'Invalid admin'
+        }
+      });
     }
     const displayName = admin.firstName + " " + admin.lastName;
     const newToken = jwt.sign({ id: admin.id }, JWT_SECRET, {
@@ -63,7 +85,9 @@ exports.refreshToken = async (req, res) => {
       }
     });
   } catch (error) {
-    res.status(400).json({ message: 'Error refreshing token: ' + error.message });
+    res.status(500).json({ 
+      type:'refreshToken',
+      message: 'Error refreshing token: ' + error.message });
   }
 };
 
