@@ -17,4 +17,8 @@ router.put('/portfolios/update/:id',authToken, portfolioController.updatePortfol
 
 router.delete('/portfolios/delete/:id', authToken, portfolioController.deletePortfolio);
 
+
+router.delete('/portfolios/delete', authToken, portfolioController.deletePortfolios);
+
+
 module.exports = router;

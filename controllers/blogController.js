@@ -141,3 +141,34 @@ exports.deleteBlog = async (req, res) => {
     });
   }
 };
+
+exports.deleteBlogs = async (req, res) => {
+  try {
+    const { ids } = req.body;
+    const schema = joi.array().items(joi.string().required());
+    const { error } = schema.validate(ids);
+    if (error) {
+      return res.status(400).json({
+        type:'Validation',
+        message: 'Validation failed'  
+      });
+    }
+    const deleted = await blog.destroy({
+      where: { id: ids },
+    });
+    if (!deleted) {
+      return res.status(404).json({
+        type: 'Blog',
+        message: 'Blogs not found',
+      });
+    }
+    res.status(200).json({
+      message: 'Blogs deleted successfully',
+    });
+  } catch (error) {
+    res.status(500).json({
+      type:'Blog',
+      message: error.message
+    });
+  }
+};
