@@ -17,4 +17,7 @@ router.put('/jobpost/update/:id',authToken, jobPostController.updateJobPost);
 
 router.delete('/jobpost/delete/:id', authToken, jobPostController.deleteJobPost);
 
+
+router.delete('/jobpost/delete', authToken, jobPostController.deleteJobPosts);
+
 module.exports = router;

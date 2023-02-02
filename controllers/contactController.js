@@ -90,3 +90,33 @@ exports.deleteContact = async (req, res) => {
         });
       }
 };
+exports.deleteContacts = async (req, res) => {
+  try {
+    const { ids } = req.body;
+    const schema = joi.array().items(joi.string().required());
+    const { error } = schema.validate(ids);
+    if (error) {
+      return res.status(400).json({
+        type:'Validation',
+        message: 'Validation failed'  
+      });
+    }
+    const deleted = await contactUs.destroy({
+      where: { id: ids },
+    });
+    if (!deleted) {
+      return res.status(404).json({
+        type: 'Contact',
+        message: 'Contacts not found',
+      });
+    }
+    res.status(200).json({
+      message: 'Contacts deleted successfully',
+    });
+  } catch (error) {
+    res.status(500).json({
+      type:'Contacts',
+      message: error.message
+    });
+  }
+};
