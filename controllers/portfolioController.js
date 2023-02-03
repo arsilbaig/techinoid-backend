@@ -90,7 +90,7 @@ exports.updatePortfolio = async (req, res) => {
     const { id } = req.params;
     const updated = await portfolio.update({
       title: value.title,
-      description: value.content,
+      description: value.description,
       image: value.image
     }, {
       where: { id },
