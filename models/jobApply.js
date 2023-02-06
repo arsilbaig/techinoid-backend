@@ -19,14 +19,30 @@ module.exports = (sequelize, DataTypes) => {
     },
     phone: {
       type: DataTypes.STRING,
-      unique: true,
+      unique: false,
       allowNull: false,
     },
-    resume: {
-        type: DataTypes.TEXT('long'),
-        allowNull: false,
+    jobPostid: {
+      type: DataTypes.INTEGER,
+      allowNull: false,
+      references: {
+        model: "jobPosts",
+        key: "jobPostid"
       },
-
+    }
+  }, {
+    sequelize,
+    tableName: 'jobApply',
+    timestamps: true,
+    indexes: [
+      {
+        name: "fk_jobPost_id",
+        using: "BTREE",
+        fields: [
+          { name: "jobPostid" },
+        ]
+      },
+    ]
   });
 
   return jobApply;

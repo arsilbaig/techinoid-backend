@@ -4,42 +4,43 @@ const joi = require("joi");
 const jobApply = db.jobApply
 
 const schema = joi.object({
-    name: joi.string().required(),
-    email: joi.string().required(),
-    phone: joi.string().required(),
-    resume: joi.string().required()
-  
-  })
+  name: joi.string().required(),
+  email: joi.string().required(),
+  phone: joi.string().required(),
+  resume: joi.string().required(),
+  jobPostid: joi.string().required()
+  });
 
-exports.createJobApply = async (req, res) => {
+  exports.createJobApply = async (req, res) => {
     const validation = schema.validate(req.body);
     if (validation.error) {
-      return res.status(400).json({
-        type:'Validation',
-        message: 'Validation failed',
-        error: validation.error.details
-      });
+    return res.status(400).json({
+    type:'Validation',
+    message: 'Validation failed',
+    error: validation.error.details
+    });
     }
     try {
-      const {name, email, phone, resume} = req.body;
-      const jobApplies = await jobApply.create({
-          name,
-          email,
-          phone,
-          resume
-      });
-      res.status(201).json({
-        message: 'successfully applied for job',
-        jobApplies
-      });
+    const {jobPostid, name, email, phone, resume} = req.body;
+    const jobApplies = await jobApply.create({
+    jobPostid,
+    name,
+    email,
+    phone,
+    resume
+    });
+    res.status(201).json({
+    message: 'successfully applied for job',
+    jobApplies
+    });
     } catch (error) {
-      res.status(500).json({
-        type:'Apply Job',
-        message: 'Failed to Apply for Job',
-        error: error.message
-      });
+    res.status(500).json({
+    type:'Apply Job',
+    message: 'Failed to Apply for Job',
+    error: error.message
+    });
     }
-};
+    };
 
 exports.getJobApply = async (req, res) => {
   try {

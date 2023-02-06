@@ -1,8 +1,13 @@
 const Sequelize = require('sequelize');
 
-module.exports = (sequelize) =>
+module.exports = (sequelize, DataTypes) =>
 {
 const JobPosts = sequelize.define('jobPost', {
+  jobPostid: {
+    type: DataTypes.INTEGER,
+    primaryKey: true,
+    autoIncrement: true,
+  },
   title: {
     type: Sequelize.STRING,
     allowNull: false,
