@@ -17,17 +17,12 @@ module.exports = (sequelize, DataTypes) => {
       unique: false,
       allowNull: false,
     },
-    subject: {
+    phone: {
       type: DataTypes.STRING,
-      unique: false,
+      unique: true,
       allowNull: false,
     },
-    description: {
-      type: DataTypes.TEXT('long'),
-      unique: false,
-      allowNull: false,
-    },
-    document: {
+    resume: {
         type: DataTypes.TEXT('long'),
         allowNull: false,
       },

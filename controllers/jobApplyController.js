@@ -6,9 +6,8 @@ const jobApply = db.jobApply
 const schema = joi.object({
     name: joi.string().required(),
     email: joi.string().required(),
-    subject: joi.string().required(),
-    description: joi.string().required(),
-    document: joi.string().required()
+    phone: joi.string().required(),
+    resume: joi.string().required()
   
   })
 
@@ -22,13 +21,12 @@ exports.createJobApply = async (req, res) => {
       });
     }
     try {
-      const {name, email, subject, description, document} = req.body;
+      const {name, email, phone, resume} = req.body;
       const jobApplies = await jobApply.create({
           name,
           email,
-          subject,
-          description,
-          document
+          phone,
+          resume
       });
       res.status(201).json({
         message: 'successfully applied for job',
