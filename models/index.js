@@ -17,6 +17,7 @@ db.portfolio = require("../models/portfolio")(sequelize, DataTypes);
 db.auth = require("../models/auth")(sequelize, DataTypes);
 db.JobPost = require("../models/jobPost")(sequelize, DataTypes);
 db.contactUs = require("../models/contactUs")(sequelize, DataTypes);
+db.jobApply = require("../models/jobApply")(sequelize, DataTypes);
 
 db.sequelize = sequelize;
 db.Sequelize = Sequelize;

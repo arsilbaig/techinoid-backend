@@ -25,11 +25,13 @@ const blogRoutes = require('./routes/blogRoutes');
 const portfolioRoutes = require('./routes/portfolioRoutes');
 const jobPostRoutes = require('./routes/jobPostRoutes');
 const contactRoutes = require('./routes/contactRoutes');
+const jobApplyRoutes = require('./routes/jobApplyRoutes');
 app.use('/', authRoutes);
 app.use('/', blogRoutes);
 app.use('/', portfolioRoutes);
 app.use('/', jobPostRoutes);
 app.use('/', contactRoutes);
+app.use('/', jobApplyRoutes);
 
 
 db.sequelize.sync().then(() => {
