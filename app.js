@@ -3,6 +3,13 @@ const app = express();
 const bodyParser = require('body-parser');
 const db = require('./models');
 const cors = require('cors');
+const multer  = require('multer');
+const storage = multer.memoryStorage();
+const upload = multer({ storage: storage });
+app.post('/', upload.single('avatar'), (req) => {
+    console.log(req.file);
+    // req.file.buffer is what you want to pass to create
+  });
 
 app.use(bodyParser.json({
   limit: '50mb'
@@ -26,12 +33,14 @@ const portfolioRoutes = require('./routes/portfolioRoutes');
 const jobPostRoutes = require('./routes/jobPostRoutes');
 const contactRoutes = require('./routes/contactRoutes');
 const jobApplyRoutes = require('./routes/jobApplyRoutes');
+const connectRoutes = require('./routes/connectRoutes');
 app.use('/', authRoutes);
 app.use('/', blogRoutes);
 app.use('/', portfolioRoutes);
 app.use('/', jobPostRoutes);
 app.use('/', contactRoutes);
 app.use('/', jobApplyRoutes);
+app.use('/', connectRoutes);
 
 
 db.sequelize.sync().then(() => {
