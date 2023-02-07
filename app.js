@@ -35,6 +35,6 @@ app.use('/', jobApplyRoutes);
 
 
 db.sequelize.sync().then(() => {
-  const port =  3001;
+  const port =  3050;
   app.listen(port, () => console.log(`Server started on port ${port}`));
 });
