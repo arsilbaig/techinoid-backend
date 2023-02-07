@@ -1,6 +1,6 @@
 const db = require('../models');
 const Joi = require('joi');
-const JobPost = db.JobPost
+const JobPost = db.jobPost
 
 const jobPostSchema = Joi.object({
   title: Joi.string().required(),
