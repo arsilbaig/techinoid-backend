@@ -3,7 +3,7 @@ const Sequelize = require('sequelize');
 module.exports = (sequelize, DataTypes) =>
 {
 const JobPosts = sequelize.define('jobPost', {
-  jobPostid: {
+  id: {
     type: DataTypes.INTEGER,
     primaryKey: true,
     autoIncrement: true,

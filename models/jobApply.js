@@ -27,7 +27,7 @@ module.exports = (sequelize, DataTypes) => {
       allowNull: false,
       references: {
         model: "jobPosts",
-        key: "jobPostid"
+        key: "id"
       },
     }
   }, {
@@ -36,10 +36,10 @@ module.exports = (sequelize, DataTypes) => {
     timestamps: true,
     indexes: [
       {
-        name: "fk_jobPost_id",
+        name: "fk_id",
         using: "BTREE",
         fields: [
-          { name: "jobPostid" },
+          { name: "id" },
         ]
       },
     ]
