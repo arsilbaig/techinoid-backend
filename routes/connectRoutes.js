@@ -9,4 +9,6 @@ router.get("/Connect", connectController.getConnect);
 
 router.post("/connect/create", connectController.createConnect); 
 
+router.delete("/connect/delete", connectController.deleteConnects); 
+
 module.exports = router;

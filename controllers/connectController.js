@@ -38,7 +38,6 @@ exports.createConnect = async (req, res) => {
 exports.getConnect = async (req, res) => {
   try {
     const connects = await connect.findAll();
-
     res.status(200).json({
       message: "connections Retrieved Successfully",
       connects,
@@ -47,6 +46,36 @@ exports.getConnect = async (req, res) => {
     res.status(500).json({
         type:'connection',
       message: "Failed to retrieve connections"
+    });
+  }
+};
+exports.deleteConnects = async (req, res) => {
+  try {
+    const { ids } = req.body;
+    const schema = joi.array().items(joi.string().required());
+    const { error } = schema.validate(ids);
+    if (error) {
+      return res.status(400).json({
+        type:'Validation',
+        message: 'Validation failed'  
+      });
+    }
+    const deleted = await connect.destroy({
+      where: { id: ids },
+    });
+    if (!deleted) {
+      return res.status(404).json({
+        type: 'Connection',
+        message: 'Connections not found',
+      });
+    }
+    res.status(200).json({
+      message: 'Connections deleted successfully',
+    });
+  } catch (error) {
+    res.status(500).json({
+      type:'Connection',
+      message: error.message
     });
   }
 };

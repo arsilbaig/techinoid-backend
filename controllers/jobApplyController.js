@@ -9,13 +9,12 @@ const schema = joi.object({
   name: joi.string().required(),
   email: joi.string().required(),
   phone: joi.string().required(),
-  resume: joi.string().required(),
   jobPostid: joi.string().required()
   });
 
 exports.jobApply = async (req, res) => {
 
-  upload.single('resume')(req, res, (error) => {
+  uploader.single('resume')(req, res, (error) => {
     if (error) {
       return res.status(400).send({
         message: error,
@@ -41,7 +40,7 @@ exports.jobApply = async (req, res) => {
 };
 
   exports.createJobApply = async (req, res) => {
-   const validation = schema.validate(req.body);
+   const validation = schema.validate(req.query);
     if (validation.error) {
     return res.status(400).json({
     type:'Validation',
@@ -59,8 +58,15 @@ exports.jobApply = async (req, res) => {
       }
         const uploadedFile = req?.file?.destination + req?.file?.filename;
         console.log(uploadedFile)
+     let jobObj = {
+        "jobPostid":req.query.jobPostid,
+        "name":req.query.name,
+        "email":req.query.email,
+        "phone":req.query.phone,
+        "resume":req.file.destination + req.file.filename
 
-    const {jobPostid, name, email, phone, resume} = req.body;
+      }
+    const {jobPostid, name, email, phone, resume} = req.query;
     const existingApply = await jobApply.findOne({ where: { jobPostid, email } });
     if (existingApply) {
       return res.status(400).json({
@@ -69,16 +75,13 @@ exports.jobApply = async (req, res) => {
         error: {}
       });
     }
-    const jobApplies = await jobApply.create({
-    jobPostid,
-    name,
-    email,
-    phone,
-    resume
-    });
+    const sql = `INSERT INTO jobApplies (jobPostid, name, email, phone, resume)
+    VALUES (?, ?, ?, ?, ?)`;
+  //const params = [jobPostid, name, email, phone, resume];
+  const result = await jobApply.create(jobObj);
     res.status(201).json({
     message: 'successfully applied for job',
-    jobApplies
+    result
     });
   });
     } catch (error) {
