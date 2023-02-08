@@ -3,13 +3,10 @@ const app = express();
 const bodyParser = require('body-parser');
 const db = require('./models');
 const cors = require('cors');
-const multer  = require('multer');
-const storage = multer.memoryStorage();
-const upload = multer({ storage: storage });
-app.post('/', upload.single('avatar'), (req) => {
-    console.log(req.file);
-    // req.file.buffer is what you want to pass to create
-  });
+
+
+
+app.use(express.static("public/resumes"));
 
 app.use(bodyParser.json({
   limit: '50mb'
@@ -34,6 +31,7 @@ const jobPostRoutes = require('./routes/jobPostRoutes');
 const contactRoutes = require('./routes/contactRoutes');
 const jobApplyRoutes = require('./routes/jobApplyRoutes');
 const connectRoutes = require('./routes/connectRoutes');
+const dashboardRoutes = require('./routes/dashboardRoutes');
 app.use('/', authRoutes);
 app.use('/', blogRoutes);
 app.use('/', portfolioRoutes);
@@ -41,7 +39,7 @@ app.use('/', jobPostRoutes);
 app.use('/', contactRoutes);
 app.use('/', jobApplyRoutes);
 app.use('/', connectRoutes);
-
+app.use('/', dashboardRoutes);
 
 db.sequelize.sync().then(() => {
   const port =  3050;

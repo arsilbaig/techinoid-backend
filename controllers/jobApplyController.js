@@ -63,6 +63,14 @@ exports.jobApply = async (req, res) => {
     }
     try {
     const {jobPostid, name, email, phone, resume} = req.body;
+    const existingApply = await jobApply.findOne({ where: { jobPostid, email } });
+    if (existingApply) {
+      return res.status(400).json({
+        type: 'Validation',
+        message: 'Email already applied for this job',
+        error: {}
+      });
+    }
     const jobApplies = await jobApply.create({
     jobPostid,
     name,
