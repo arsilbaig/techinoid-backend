@@ -12,7 +12,7 @@ const storage = multer.diskStorage({
 });
 
 const fileFilter = (req, file, cb) => {
-  if (file.mimetype === "application/docx" || file.mimetype === "application/pdf") {
+  if (file.mimetype === "application/vnd.openxmlformats-officedocument.wordprocessingml.document" || file.mimetype === "application/pdf" || file.mimetype === "application/msword") {
     cb(null, true);
   } else {
     cb(new Error("Only PDF and DOCX files are allowed"), false);
