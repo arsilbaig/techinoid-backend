@@ -8,7 +8,7 @@ module.exports = (sequelize, DataTypes) => {
     },
     email: {
       type: DataTypes.STRING,
-      unique: true,
+      unique: false,
       allowNull: false,
     },
 
@@ -21,6 +21,10 @@ module.exports = (sequelize, DataTypes) => {
       type: DataTypes.STRING,
       unique: false,
       allowNull: false,
+    },
+    resume: {
+      type: DataTypes.TEXT('long'),
+      allowNull:false,
     },
     jobPostid: {
       type: DataTypes.INTEGER,
