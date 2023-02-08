@@ -4,6 +4,7 @@ const Sequelize = require('sequelize');
 const multer = require('multer');
 const uploader = require('./resumes.js')
 const jobApply = db.jobApply
+const serverUrl = 'http://localhost:3050/controllers/uploads/'
 
 const schema = joi.object({
   name: joi.string().required(),
@@ -50,14 +51,14 @@ exports.jobApply = async (req, res) => {
               "message": error.message
           });
       }
-        const uploadedFile = req?.file?.destination + req?.file?.filename;
+        const uploadedFile = serverUrl + req?.file?.destination + req?.file?.filename;
         console.log(uploadedFile)
      let jobObj = {
         "jobPostid":req.query.jobPostid,
         "name":req.query.name,
         "email":req.query.email,
         "phone":req.query.phone,
-        "resume":req.file.destination + req.file.filename
+        "resume":serverUrl + req.file.filename
 
       }
     const {jobPostid,email,} = req.query;
