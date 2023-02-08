@@ -20,14 +20,8 @@ exports.jobApply = async (req, res) => {
         message: error,
       });
     }
-    
-
     const resume = req.file;
-
-
     try {
-     
-
       res.status(200).send({
         message: 'Resume uploaded successfully',
       });
@@ -66,7 +60,7 @@ exports.jobApply = async (req, res) => {
         "resume":req.file.destination + req.file.filename
 
       }
-    const {jobPostid, name, email, phone, resume} = req.query;
+    const {jobPostid,email,} = req.query;
     const existingApply = await jobApply.findOne({ where: { jobPostid, email } });
     if (existingApply) {
       return res.status(400).json({
