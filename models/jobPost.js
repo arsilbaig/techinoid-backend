@@ -1,4 +1,6 @@
 const Sequelize = require('sequelize');
+const { jobApply } = require('.');
+
 
 module.exports = (sequelize, DataTypes) =>
 {

@@ -2,6 +2,7 @@ const db = require("../models");
 const joi = require("joi");
 const Sequelize = require('sequelize');
 const multer = require('multer');
+const uploader = require('./resumes.js')
 const jobApply = db.jobApply
 
 const schema = joi.object({
@@ -11,19 +12,6 @@ const schema = joi.object({
   resume: joi.string().required(),
   jobPostid: joi.string().required()
   });
-
-  
-
-const storage = multer.diskStorage({
-  destination: function (req, file, cb) {
-    cb(null, 'public/resumes');
-  },
-  filename: function (req, file, cb) {
-    cb(null, file.fieldname + '-' + Date.now() + '-' + file.originalname);
-  },
-});
-
-const upload = multer({ storage });
 
 exports.jobApply = async (req, res) => {
 
@@ -53,7 +41,7 @@ exports.jobApply = async (req, res) => {
 };
 
   exports.createJobApply = async (req, res) => {
-    const validation = schema.validate(req.body);
+   const validation = schema.validate(req.body);
     if (validation.error) {
     return res.status(400).json({
     type:'Validation',
@@ -62,6 +50,16 @@ exports.jobApply = async (req, res) => {
     });
     }
     try {
+      await uploader(req, res, async function (error, data) {
+        if (error) {
+          return res.status(400).send({
+              "status": false,
+              "message": error.message
+          });
+      }
+        const uploadedFile = req?.file?.destination + req?.file?.filename;
+        console.log(uploadedFile)
+
     const {jobPostid, name, email, phone, resume} = req.body;
     const existingApply = await jobApply.findOne({ where: { jobPostid, email } });
     if (existingApply) {
@@ -82,6 +80,7 @@ exports.jobApply = async (req, res) => {
     message: 'successfully applied for job',
     jobApplies
     });
+  });
     } catch (error) {
     res.status(500).json({
     type:'Apply Job',
