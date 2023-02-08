@@ -1,6 +1,7 @@
 const db = require("../models");
 const joi = require("joi");
-
+const Sequelize = require('sequelize');
+const multer = require('multer');
 const jobApply = db.jobApply
 
 const schema = joi.object({
@@ -10,6 +11,46 @@ const schema = joi.object({
   resume: joi.string().required(),
   jobPostid: joi.string().required()
   });
+
+  
+
+const storage = multer.diskStorage({
+  destination: function (req, file, cb) {
+    cb(null, 'public/resumes');
+  },
+  filename: function (req, file, cb) {
+    cb(null, file.fieldname + '-' + Date.now() + '-' + file.originalname);
+  },
+});
+
+const upload = multer({ storage });
+
+exports.jobApply = async (req, res) => {
+
+  upload.single('resume')(req, res, (error) => {
+    if (error) {
+      return res.status(400).send({
+        message: error,
+      });
+    }
+    
+
+    const resume = req.file;
+
+
+    try {
+     
+
+      res.status(200).send({
+        message: 'Resume uploaded successfully',
+      });
+    } catch (err) {
+      res.status(500).send({
+        message: 'Error saving resume',
+      });
+    }
+  });
+};
 
   exports.createJobApply = async (req, res) => {
     const validation = schema.validate(req.body);
@@ -44,16 +85,29 @@ const schema = joi.object({
 
 exports.getJobApply = async (req, res) => {
   try {
-    const jobApplies = await jobApply.findAll();
-
+    const jobApplies = await jobApply.findAll({
+      attributes: ['id', 'name', 'email', 'phone', 'resume', 'jobPostid'],
+      include: [{
+        attributes: ['title'],
+        model: db.jobPost, as: 'jobPost' 
+     }],
+      
+    });
     res.status(200).json({
       message: "Applied Jobs Retrieved Successfully",
-      jobApplies,
+      jobApplies: jobApplies.map(jobApply => ({
+        id: jobApply.id,
+        name: jobApply.name,
+        email: jobApply.email,
+        phone: jobApply.phone,
+        resume: jobApply.resume,
+        jobPost: jobApply.jobPost.title
+      }))
     });
   } catch (error) {
     res.status(500).json({
         type:'Apply for jobs',
-      message: "Failed to retrieve Applications for jobs"
+        message: error
     });
   }
 };
@@ -67,9 +121,11 @@ exports.getJobApplyById = async (req, res) => {
           message: 'Job Applications not found, Invalid id',
         });
       }
+      res.sendFile("/resume.dat");
       res.status(200).json({
         message: 'Job Application retrieved successfully',
         jobApplies
+        
       });
     } catch (error) {
       res.status(500).json({
