@@ -4,9 +4,21 @@ const bodyParser = require('body-parser');
 const db = require('./models');
 const cors = require('cors');
 
+app.get('/download/:id/', async (req, res) => {
 
 
-app.use(express.static("public/resumes"));
+  await db.jobApply.findOne(
+    { where: { id: req.params.id } }
+    ).then(function(data){
+      console.log(data);
+      const file = `${__dirname}/controllers/uploads/`+ data.resume;
+      res.download(file);
+    });
+  
+});
+
+
+
 
 app.use(bodyParser.json({
   limit: '50mb'

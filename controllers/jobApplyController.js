@@ -58,7 +58,7 @@ exports.jobApply = async (req, res) => {
         "name":req.query.name,
         "email":req.query.email,
         "phone":req.query.phone,
-        "resume":serverUrl + req.file.filename
+        "resume":req.file.filename
 
       }
     const {jobPostid,email,} = req.query;
