@@ -1,8 +1,30 @@
 const express = require('express');
+const fs = require('fs');
+const http = require('http');
+const https = require('https');
 const app = express();
 const bodyParser = require('body-parser');
 const db = require('./models');
 const cors = require('cors');
+const config = require('./config/config.json')['development'];
+const Sequelize = require('sequelize');
+
+const sequelize = new Sequelize(
+  config.database,
+  config.username,
+  config.password,
+  {
+    host: config.host,
+    dialect: config.dialect,
+    // Other Sequelize options go here
+  }
+);
+// SSL Configration
+const httpsOptions = {
+  // cert: fs.readFileSync(''),
+  // ca: fs.readFileSync(''),
+  // key: fs.readFileSync('')
+};
 
 app.get('/download/:id/', async (req, res) => {
 
@@ -52,6 +74,11 @@ app.use('/', contactRoutes);
 app.use('/', jobApplyRoutes);
 app.use('/', connectRoutes);
 app.use('/', dashboardRoutes);
+
+const httpServer = http.createServer(app);
+const httpsServer = https.createServer(httpsOptions, app);
+
+sequelize.httpsServer = httpsServer;
 
 db.sequelize.sync().then(() => {
   const port =  3050;
